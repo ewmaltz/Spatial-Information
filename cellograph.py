@@ -45,15 +45,15 @@ class Cellograph():
         cts = np.array(list(set(cell_type_list)))
         ct_img = np.zeros_like(seg_map_img)-1
         for i, ct in enumerate(cell_type_list):
-            if not i%2000:
-                print(i)
+            if not i%4000:
+                print('Preparing Cell Type Image for Daignostics...', i)
             coords = seg_map_img==self.cell_nodes[i]
             ct_img[coords] = np.where(cts==ct)[0][0]
 
         return ct_img
 
     
-    def run_rigid_dendogram_sweep_expt(self):
+    def run_rigid_dendogram_sweep_expt(self, infomap_args='--undirected'):
         self.results_rds = {i:{} for i in range(len(self.dendogram_levels))}
 
         for d_ix, level in enumerate(self.dendogram_levels):
@@ -135,7 +135,7 @@ class Cellograph():
                                                                    e in edge_weights.keys()], 1)
             self.results_rds[d_ix]['edges'] = new_edges
             self.results_rds[d_ix]['edge_weights'] = edge_weights  
-            self.run_infomap(self.results_rds, d_ix)
+            self.run_infomap(self.results_rds, d_ix, infomap_args)
             
         print('Experiment complete. Results saved in self.results_rds')
     
